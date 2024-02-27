@@ -1,0 +1,44 @@
+Pour realiser l'attente: 
+
+Trier la liste avec reverseList :
+
+Si l'ordre de la liste n'est pas garanti, il est judicieux de trier la liste avant de procéder à d'autres opérations.
+
+j'ai créé une méthode reverseList dans la classe SlotService pour trier la liste. 
+
+Confusion de la liste triée avec confusionList :
+
+Après avoir trié la liste, j'ai une méthode confusionList qui regroupe les éléments par la date de service.
+
+Parce que mon objectif c'est à la fin j'aurais une reponse comme :
+
+{
+    "2024-01-20": [
+        {
+            "beginService": "15:00:00",
+            "endService": "18:00:00"
+        },
+        {
+            "beginService": "20:00:00",
+            "endService": "22:00:00"
+        }
+    ],
+    "2024-01-21": [
+        {
+            "beginService": "08:00:00",
+            "endService": "13:00:00"
+        }
+    ],
+    "2024-01-22": [
+        {
+            "beginService": "08:00:00",
+            "endService": "12:00:00"
+        }
+    ],
+    "2024-01-23": [
+        {
+            "beginService": "08:00:00",
+            "endService": "15:00:00"
+        }
+    ]
+}

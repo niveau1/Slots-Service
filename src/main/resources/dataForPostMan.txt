@@ -1,0 +1,51 @@
+[
+  {
+    "dateService": "2024-01-23",
+    "heureService": {
+      "beginService": "08:00",
+      "endService": "10:00"
+    }
+  },
+  {
+    "dateService": "2024-01-22",
+    "heureService": {
+      "beginService": "08:00",
+      "endService": "12:00"
+    }
+  },
+  {
+    "dateService": "2024-01-23",
+    "heureService": {
+      "beginService": "10:00",
+      "endService": "15:00"
+    }
+  },
+  {
+    "dateService": "2024-01-20",
+    "heureService": {
+      "beginService": "15:00",
+      "endService": "18:00"
+    }
+  },
+  {
+    "dateService": "2024-01-20",
+    "heureService": {
+      "beginService": "20:00",
+      "endService": "22:00"
+    }
+  },
+  {
+    "dateService": "2024-01-21",
+    "heureService": {
+      "beginService": "08:00",
+      "endService": "10:00"
+    }
+  },
+  {
+    "dateService": "2024-01-21",
+    "heureService": {
+      "beginService": "10:00",
+      "endService": "13:00"
+    }
+  }
+]
