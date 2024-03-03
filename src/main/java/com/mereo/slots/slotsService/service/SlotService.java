@@ -40,51 +40,75 @@ public class SlotService {
         Map<String, List<ServiceTime>> resultMap = new HashMap<>();
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String key = "";
-        ServiceTime currentServiceTime = new ServiceTime();
         List<ServiceTime> serviceTimes = new ArrayList<>();
 
-        if (slotList.size() == 1) {
-            Slot slot = slotList.get(0);
-            key = dateFormat.format(slot.getDateService());
-            currentServiceTime = new ServiceTime(
-                    slot.getHeureService().getBeginService(),
-                    slot.getHeureService().getEndService()
-            );
-            serviceTimes.add(currentServiceTime);
-            resultMap.put(key, serviceTimes);
-        }
-        else if(slotList.isEmpty()) {
+        if (slotList.isEmpty()) {
             resultMap.put("Pas de service réçu", serviceTimes);
-        }
-        else {
-        for (int i = 0; i < slotList.size(); i++) {
-            Slot slot1 = slotList.get(i); //preparer le premier element pour faire la comparaison
-
-            key = dateFormat.format(slot1.getDateService());
-            serviceTimes = resultMap.computeIfAbsent(key, k -> new ArrayList<>());
-
-            currentServiceTime = new ServiceTime(
-                    slot1.getHeureService().getBeginService(),
-                    slot1.getHeureService().getEndService()
-            );
-
-            // Parcourir les éléments suivants pour fusionner les plages horaires si les 2 element ont la meme date
-            for (int j = i + 1; j < slotList.size(); j++) {
-                Slot slot2 = slotList.get(j);
-
-                if (slot1.getDateService().equals(slot2.getDateService())) {
-                    if (slot1.getHeureService().getEndService().isBefore(slot2.getHeureService().getBeginService())) {
-                        break; // Arrêter si la plage horaire suivante ne peut pas être fusionnée
-                    } else {
-                        currentServiceTime.setEndService(slot2.getHeureService().getEndService());
-                        i = j;
-                    }
-                } else {
-                    break; // Arrêter si les dates sont différentes
+        } else {
+            for (int i = 0; i < slotList.size(); i++) {
+                Slot slot = slotList.get(i);
+                //Recupere la date de service comme la clé
+                key = dateFormat.format(slot.getDateService());
+                //Recupere le serviceTime de slot actuel
+                ServiceTime currentServiceTime = new ServiceTime(
+                        slot.getHeureService().getBeginService(),
+                        slot.getHeureService().getEndService()
+                );
+                //si c'est le permier element on aliment le ArrayList dans le map directement
+                if(i==0) {
+                    serviceTimes.add(currentServiceTime);
                 }
+                else {
+                    // comme ce n'est pas le permier element on verifier si la Date deja existe dans le map
+                    // dans le map existe : {
+                    //    "2024-01-24": [
+                    //        {
+                    //            "beginService": "08:00:00",
+                    //            "endService": "15:00:00"
+                    //        }
+                    //    ]
+                    //} et notre objet actuel possede la meme date de service comme "2024-01-24"
+                    if (resultMap.containsKey(key)) {
+                        //recuperer la liste correspond le key
+                        serviceTimes = resultMap.get(key);
+                        //recuperer la dernier element dans la liste pour faire la comparation
+                        ServiceTime serviceTimeDernierAjoute = serviceTimes.get(serviceTimes.size() - 1);
+                        if (!serviceTimeDernierAjoute.getEndService().isBefore(slot.getHeureService().getBeginService())) {
+                            serviceTimeDernierAjoute.setEndService(slot.getHeureService().getEndService());
+                            //update le dernier elment
+                            resultMap.get(key).set(serviceTimes.size() - 1, serviceTimeDernierAjoute);
+                        }
+                        else {
+                            //sinon ajouter l'element
+                            //dans le cas
+                            /*
+                            {
+                                "dateService": "2024-01-20",
+                                    "heureService": {
+                                "beginService": "15:00",
+                                        "endService": "18:00"
+                            }
+                            },
+                            {
+                                "dateService": "2024-01-20",
+                                    "heureService": {
+                                "beginService": "20:00",
+                                        "endService": "22:00"
+                            }
+                            }
+                            */
+                            serviceTimes.add(currentServiceTime);
+                        }
+                    }
+                    else{
+                        // si c'est un dateService existe pas dans le map
+                        // alors on va vider le liste et l'alimente avec le data serviceTime de element actuel
+                        serviceTimes = new ArrayList<>();
+                        serviceTimes.add(currentServiceTime);
+                    }
+                }
+                resultMap.put(key, serviceTimes);
             }
-            serviceTimes.add(currentServiceTime);
-        }
         }
         return resultMap;
     }
